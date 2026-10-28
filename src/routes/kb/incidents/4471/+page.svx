@@ -12,6 +12,12 @@ reviewed: 2026-09-30
   import Callout from '#lib/kb/Callout.svelte';
 </script>
 
+<Callout kind="warn">
+Split on 2026-10-28: #4471 holds more than one problem. See [#4471 · one ticket, two problems](/kb/incidents/4471/split)
+and the tickets [#1 parser](https://github.com/ciborro/mega-what-it-shows/issues/1) and
+[#2 hint](https://github.com/ciborro/mega-what-it-shows/issues/2).
+</Callout>
+
 Since April, people have told us their bookings land on the wrong day: a month flipped. By
 4 October the desk had **412 reports**.
 
