@@ -26,15 +26,17 @@ problems below stay open after it ships.
 
 <ProblemTable ticket={4471} />
 
-Each row has its own ticket and its own count. The table is built from the ticket export at render
-time, so the counts follow the queue.
+Each row has its own ticket and its own count, counted the desk's way (`causes.ts`, as on the
+[#4471](/kb/incidents/4471) table). The table is built from the ticket export at render time, so the
+counts follow the queue.
 
 ## How a report is placed
 
 1. Count each report once: the export pages overlap, so the same id can appear twice.
-2. If the desk read it as a one-day move (`desk-notes.json`), it is `one-day`.
-3. Otherwise ask the tenant, not the reporter's browser: a day-first tenant on a `booking-v3`
-   form gets `hint`; every other day-first report is `parser` (`causes.ts`).
+2. Ask the tenant, not the reporter's browser: a day-first tenant on a `booking-v3` form gets
+   `hint`; every other day-first report is `parser` (`causes.ts`).
+3. If the desk read it as a one-day move (`desk-notes.json`), it also belongs to `one-day`. It stays
+   counted where its tenant files it.
 
 Intake's tag is not used. It is a guess from the reporter's browser and often names the wrong cause:
 compare the "tagged as" column on [#4471](/kb/incidents/4471).

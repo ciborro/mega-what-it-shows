@@ -10,14 +10,13 @@
 
   const result = $derived(splitTicket(reports as Report[], ticket, tenantOf, notes.oneDayMove));
   const tickets: Record<string, { issue: number; title: string }> = split.tickets;
-  const covered = $derived(result.groups.filter((g) => tickets[g.problem]).reduce((n, g) => n + g.reports.length, 0));
+  const filed = $derived(result.groups.filter((g) => g.filedUnder.length));
 </script>
 
 <p class="sum">
   <strong>{result.merged}</strong> reports merged into #{ticket} ·
   <strong>{result.groups.length}</strong>
-  {result.groups.length === 1 ? 'problem' : 'problems'} ·
-  <strong>{covered}</strong> covered by a ticket of their own
+  {result.groups.length === 1 ? 'problem' : 'problems'}, each with a ticket of its own
 </p>
 
 <table>
@@ -40,8 +39,16 @@
   </tbody>
 </table>
 
+{#each filed as g (g.problem)}
+  <p class="note">
+    The {g.reports.length} <code>{g.problem}</code> reports also stay counted under
+    {#each g.filedUnder as c, i (c)}{i ? ', ' : ''}<code>{c}</code>{/each}, where their tenant files them.
+  </p>
+{/each}
+
 <style>
   .sum { font-size: 1.1rem; }
+  .note { color: var(--muted); font-size: 0.85em; }
   .open td { background: var(--warn-bg); }
   .open td:last-child { color: var(--warn); font-weight: 600; }
 </style>
