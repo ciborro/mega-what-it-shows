@@ -4,7 +4,7 @@ title: '#4471 · one ticket, several problems'
 owner: ciborro
 status: proposed
 reviewed: 2026-10-28
-signature: ciborro
+signature: 'v1.eyJzdWIiOiIyODYiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5MzE3NjM4NiwiZXhwIjoxNzkzMjYyNzg2fQ.j79rU9MDnSB-khljI1hi5X2SErN8lyOdgl7BDHodlxg'
 ---
 
 <script>

@@ -39,6 +39,6 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 
 Ticket #4471 split into one GitHub issue per problem: [#1 parser](https://github.com/ciborro/mega-what-it-shows/issues/1), [#2 hint](https://github.com/ciborro/mega-what-it-shows/issues/2), [#3 one-day](https://github.com/ciborro/mega-what-it-shows/issues/3).
 
-- Page: `src/routes/kb/incidents/4471/split/+page.svx` (signed `ciborro`), logic in `src/lib/kb/problems.ts`, table in `src/lib/kb/ProblemTable.svelte`, ticket map in `src/lib/data/tickets-4471.json`.
+- Page: `src/routes/kb/incidents/4471/split/+page.svx` (owner `ciborro`, signed with the course ticket), logic in `src/lib/kb/problems.ts`, table in `src/lib/kb/ProblemTable.svelte`, ticket map in `src/lib/data/tickets-4471.json`.
 - As the desk sees it: `build/kb/incidents/4471/split/index.html` (static build) and `rendered/kb-incidents-4471-split.png`.
 - Build: `npm ci && npm run build` (SvelteKit + mdsvex, config in `vite.config.js`, `#lib/*` via `package.json` imports).
