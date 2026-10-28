@@ -1,6 +1,6 @@
 ---
 layout: runbook
-title: '#4471 · one ticket, two problems'
+title: '#4471 · one ticket, three problems'
 owner: ciborro
 status: proposed
 reviewed: 2026-10-28
@@ -19,21 +19,22 @@ subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)), and 
 subject that more than one bug produces.
 
 <Callout kind="warn">
-The fix queued for #4471 is the parser fix. It does nothing for the <code>hint</code> reports: they
-now have their own ticket.
+The fix queued for #4471 is the parser fix. It does nothing for the <code>hint</code> or
+<code>one-day</code> reports: they now have their own tickets.
 </Callout>
 
 ## What #4471 holds
 
 <CauseTable ticket={4471} />
 
-Each cause has its own ticket now:
+Each cause has its own ticket, linked in the table's last column:
 
 - `parser` → [#1 Shared date parser reads day-first dates month first](https://github.com/ciborro/mega-what-it-shows/issues/1)
 - `hint` → [#2 booking-v3 form tells day-first tenants to type MM/DD/YYYY](https://github.com/ciborro/mega-what-it-shows/issues/2)
+- `one-day` → [#4 Dates shift by one day across time zones](https://github.com/ciborro/mega-what-it-shows/issues/4)
 
-The counts are the desk's own: the table is built from the ticket export when the page renders, so
-they follow the queue.
+The counts are the desk's own: the table is built from the kb's data when the page renders. Which
+ticket each cause went to is in `src/lib/data/tickets.json`.
 
 ## What each problem is
 
@@ -42,17 +43,19 @@ swapped: 7 April becomes 4 July.
 
 **`hint`** — `booking-v3` prints `MM/DD/YYYY` under its date field. People type month first, as told,
 and the form reads the value the tenant's way. Same symptom as `parser`, different code, different
-fix. The table above marks it "no ticket of its own"; #2 is that ticket.
+fix.
 
-The reports in the footnote, which the desk read as a one-day move, stay counted under `parser`,
-where their tenant files them. Their bodies describe a date shifted by one day rather than a swap,
-so check them again once the parser fix ships.
+**`one-day`** — the reports the desk read as a one-day move (`desk-notes.json`). Their bodies
+describe a date shifted by one day, or different days in different time zones, not a swap. Their
+tenants would file them under `parser`, but the parser fix will not touch them. Likely time-zone
+handling; the reports do not prove it.
 
 ## How a report is placed
 
 1. Count each report once: the export pages overlap, so the same id can appear twice.
-2. Ask the tenant, not the reporter's browser (`causes.ts`): a day-first tenant on a `booking-v3`
-   form is `hint`; every other day-first report is `parser`.
+2. A report the desk read as a one-day move (`desk-notes.json`) is `one-day`.
+3. Otherwise ask the tenant, not the reporter's browser (`causes.ts`): a day-first tenant on a
+   `booking-v3` form is `hint`; every other day-first report is `parser`.
 
 Intake's tag is not used. It is a guess from the reporter's browser and often names the wrong
 cause: compare the "tagged as" column above.
