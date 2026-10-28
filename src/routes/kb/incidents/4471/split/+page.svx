@@ -1,0 +1,60 @@
+---
+layout: runbook
+title: '#4471 · one ticket, several problems'
+owner: ciborro
+status: proposed
+reviewed: 2026-10-28
+signature: ciborro
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) says the date reports are one issue with one fix queued. The reports
+say otherwise. They were merged on subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)),
+and "wrong date" is a subject that more than one bug produces.
+
+<Callout kind="warn">
+The fix queued for #4471 is the parser fix. It closes the <code>parser</code> problem only. The other
+problems below stay open after it ships.
+</Callout>
+
+## The problems in #4471
+
+<ProblemTable ticket={4471} />
+
+Each row has its own ticket and its own count. The table is built from the ticket export at render
+time, so the counts follow the queue.
+
+## How a report is placed
+
+1. Count each report once: the export pages overlap, so the same id can appear twice.
+2. If the desk read it as a one-day move (`desk-notes.json`), it is `one-day`.
+3. Otherwise ask the tenant, not the reporter's browser: a day-first tenant on a `booking-v3`
+   form gets `hint`; every other day-first report is `parser` (`causes.ts`).
+
+Intake's tag is not used. It is a guess from the reporter's browser and often names the wrong cause:
+compare the "tagged as" column on [#4471](/kb/incidents/4471).
+
+## What each problem is
+
+**`parser`** — the shared parser reads every date month first. Day-first tenants get day and month
+swapped: 7 April becomes 4 July.
+
+**`hint`** — `booking-v3` prints `MM/DD/YYYY` under its date field. People type month first, as told,
+and the form reads the value the tenant's way. Same symptom as `parser`, different code, different fix.
+
+**`one-day`** — the date moves by one day, not by a swap: Tuesday becomes Monday, a client in Lisbon
+and a client in Toronto see different days for the same meeting, an invite arrives before the
+booking. That is time-zone handling, not parsing.
+
+## For the desk
+
+- Merge into a ticket only reports with the same problem, not the same subject.
+- When a new date report comes in, place it with the steps above and add it to that problem's ticket.
+- Do not close #4471's reports when the parser fix ships; check `hint` and `one-day` first.
+
+<RenderStamp {signature} />
