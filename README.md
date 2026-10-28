@@ -37,8 +37,8 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 
 ## S01E03 work (ciborro, 2026-10-28)
 
-Ticket #4471 split into one GitHub issue per problem: [#1 parser](https://github.com/ciborro/mega-what-it-shows/issues/1), [#2 hint](https://github.com/ciborro/mega-what-it-shows/issues/2), [#3 one-day](https://github.com/ciborro/mega-what-it-shows/issues/3).
+Ticket #4471 split into one GitHub issue per cause: [#1 parser](https://github.com/ciborro/mega-what-it-shows/issues/1), [#2 hint](https://github.com/ciborro/mega-what-it-shows/issues/2).
 
-- Page: `src/routes/kb/incidents/4471/split/+page.svx` (owner `ciborro`, signed with the course ticket). It computes the counts with the kb's own data and logic as exported (`causes.ts`, `locales.ts`, `desk-notes.json`); nothing in `src/lib` is changed.
+- Page: `src/routes/kb/incidents/4471/split/+page.svx` (owner `ciborro`, signed with the course ticket). Counts come from the desk's own `<CauseTable ticket={4471} />`; nothing in `src/lib` is changed.
 - As the desk sees it: `build/kb/incidents/4471/split/index.html` (static build) and `rendered/kb-incidents-4471-split.png`.
 - Build: `npm ci && npm run build` (SvelteKit + mdsvex, config in `vite.config.js`, `#lib/*` via `package.json` imports).

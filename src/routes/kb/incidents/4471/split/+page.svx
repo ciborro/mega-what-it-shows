@@ -1,6 +1,6 @@
 ---
 layout: runbook
-title: '#4471 · one ticket, several problems'
+title: '#4471 · one ticket, two problems'
 owner: ciborro
 status: proposed
 reviewed: 2026-10-28
@@ -8,91 +8,58 @@ signature: 'v1.eyJzdWIiOiIyODYiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhd
 ---
 
 <script>
-  // Only the kb's own data and logic, as exported: no new files in src/lib.
-  import reports from '#lib/data/reports-4471.json';
-  import notes from '#lib/data/desk-notes.json';
-  import { causeOf, uniqueById } from '#lib/kb/causes';
-  import { tenantOf } from '#lib/kb/locales';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
   import Callout from '#lib/kb/Callout.svelte';
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
-
-  const REPO = 'https://github.com/ciborro/mega-what-it-shows/issues';
-  const TICKETS = [
-    { issue: 1, problem: 'parser', title: 'Shared date parser reads day-first dates month first' },
-    { issue: 2, problem: 'hint', title: 'booking-v3 form tells day-first tenants to type MM/DD/YYYY' },
-    { issue: 3, problem: 'one-day', title: 'Invites land one day off across time zones' },
-  ];
-
-  // One id, one report. A report the desk read as a one-day move is that problem; the rest go by tenant.
-  const merged = uniqueById(reports).filter((r) => r.mergedInto === 4471);
-  const problemOf = (r) => (notes.oneDayMove.includes(r.id) ? 'one-day' : causeOf(r, tenantOf(r)) ?? 'unplaced');
-  const rows = TICKETS.map((t) => {
-    const rs = merged.filter((r) => problemOf(r) === t.problem);
-    const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();
-    return { ...t, reports: rs.length, tenants: new Set(rs.map((r) => r.tenant)).size, first: days[0], last: days[days.length - 1] };
-  });
-  const placed = rows.reduce((n, r) => n + r.reports, 0);
 </script>
 
-[#4471](/kb/incidents/4471) says the date reports are one issue with one fix queued. The reports
-say otherwise. They were merged on subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)),
-and "wrong date" is a subject that more than one bug produces.
+[#4471](/kb/incidents/4471) says the date reports are one issue with one fix queued. The desk's own
+table below says otherwise: the reports merged into it have more than one cause. They were merged on
+subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)), and "wrong date" is a
+subject that more than one bug produces.
 
 <Callout kind="warn">
-The fix queued for #4471 is the parser fix. It closes <a href="{REPO}/1">#1</a> only.
-<a href="{REPO}/2">#2</a> and <a href="{REPO}/3">#3</a> stay open after it ships.
+The fix queued for #4471 is the parser fix. It does nothing for the <code>hint</code> reports: they
+now have their own ticket.
 </Callout>
 
-## The problems in #4471
+## What #4471 holds
 
-<p><strong>{merged.length}</strong> reports merged into #4471 · <strong>{rows.length}</strong> problems ·
-<strong>{placed}</strong> placed in a ticket of their own</p>
+<CauseTable ticket={4471} />
 
-<table>
-  <thead><tr><th>ticket</th><th>problem</th><th>reports</th><th>tenants</th><th>seen</th></tr></thead>
-  <tbody>
-    {#each rows as r (r.issue)}
-      <tr>
-        <td><a href="{REPO}/{r.issue}">#{r.issue}</a> {r.title}</td>
-        <td><code>{r.problem}</code></td>
-        <td>{r.reports}</td>
-        <td>{r.tenants}</td>
-        <td>{r.first} → {r.last}</td>
-      </tr>
-    {/each}
-  </tbody>
-</table>
+Each cause has its own ticket now:
 
-The table is computed from the ticket export when the page renders, with the desk's own logic
-(`causes.ts`, `locales.ts`, `desk-notes.json`), so the counts follow the queue.
+- `parser` → [#1 Shared date parser reads day-first dates month first](https://github.com/ciborro/mega-what-it-shows/issues/1)
+- `hint` → [#2 booking-v3 form tells day-first tenants to type MM/DD/YYYY](https://github.com/ciborro/mega-what-it-shows/issues/2)
+
+The counts are the desk's own: the table is built from the ticket export when the page renders, so
+they follow the queue.
+
+## What each problem is
+
+**`parser`** — the shared parser reads every date month first. Day-first tenants get day and month
+swapped: 7 April becomes 4 July.
+
+**`hint`** — `booking-v3` prints `MM/DD/YYYY` under its date field. People type month first, as told,
+and the form reads the value the tenant's way. Same symptom as `parser`, different code, different
+fix. The table above marks it "no ticket of its own"; #2 is that ticket.
+
+The reports in the footnote, which the desk read as a one-day move, stay counted under `parser`,
+where their tenant files them. Their bodies describe a date shifted by one day rather than a swap,
+so check them again once the parser fix ships.
 
 ## How a report is placed
 
 1. Count each report once: the export pages overlap, so the same id can appear twice.
-2. If the desk read it as a one-day move (`desk-notes.json`), it goes to #3.
-3. Otherwise ask the tenant, not the reporter's browser (`causes.ts`): a day-first tenant on a
-   `booking-v3` form goes to #2; every other day-first report goes to #1.
+2. Ask the tenant, not the reporter's browser (`causes.ts`): a day-first tenant on a `booking-v3`
+   form is `hint`; every other day-first report is `parser`.
 
 Intake's tag is not used. It is a guess from the reporter's browser and often names the wrong
-cause: compare the "tagged as" column on [#4471](/kb/incidents/4471).
-
-## What each problem is
-
-**#1 `parser`** — the shared parser reads every date month first. Day-first tenants get day and
-month swapped: 7 April becomes 4 July.
-
-**#2 `hint`** — `booking-v3` prints `MM/DD/YYYY` under its date field. People type month first, as
-told, and the form reads the value the tenant's way. Same symptom as #1, different code, different fix.
-
-**#3 `one-day`** — the date moves by one day, not by a swap: Tuesday becomes Monday, a client in
-Lisbon and a client in Toronto see different days for the same meeting, an invite arrives before the
-booking. That is time-zone handling, not parsing. By tenant these reports file under `parser`; the
-#4471 page only footnotes them.
+cause: compare the "tagged as" column above.
 
 ## For the desk
 
-- Merge into a ticket only reports with the same problem, not the same subject.
-- When a new date report comes in, place it with the steps above and add it to that ticket.
-- Do not close the date reports when the parser fix ships; #2 and #3 need their own fixes.
+- Merge into a ticket only reports with the same cause, not the same subject.
+- When a new date report comes in, place it with the steps above and add it to that cause's ticket.
 
 <RenderStamp {signature} />
