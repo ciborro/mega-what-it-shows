@@ -9,26 +9,29 @@
 		<link href="../../../../_app/immutable/chunks/B2Ul7l_u.js" rel="modulepreload">
 		<link href="../../../../_app/immutable/chunks/BCPXOG7W.js" rel="modulepreload">
 		<link href="../../../../_app/immutable/chunks/Dh1V97Jm.js" rel="modulepreload">
-		<link href="../../../../_app/immutable/entry/app.Cu5m978g.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/entry/app.CzRGgSXP.js" rel="modulepreload">
 		<link href="../../../../_app/immutable/nodes/0.BurGglGN.js" rel="modulepreload">
 		<link href="../../../../_app/immutable/chunks/DK3Fl9T5.js" rel="modulepreload">
-		<link href="../../../../_app/immutable/nodes/5.CvUS5sZN.js" rel="modulepreload">
-		<link href="../../../../_app/immutable/chunks/BXAuZbuF.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/nodes/5.DMi9GDFD.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/CrCVc7gb.js" rel="modulepreload">
 		<link href="../../../../_app/immutable/chunks/BTPwLomz.js" rel="modulepreload">
-		<link href="../../../../_app/immutable/chunks/CY2OBtij.js" rel="modulepreload">
-		<link href="../../../../_app/immutable/chunks/CNCIQFw0.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/D_eX76ox.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/BIy4WKJS.js" rel="modulepreload">
 		<!--e2jw2j--><!----><title>#4471 · one ticket, three problems · support kb</title>
 		<link href="../../../../_app/immutable/assets/runbook.COyw0cbZ.css" rel="stylesheet">
 		<link href="../../../../_app/immutable/assets/Callout.AbLv9dM_.css" rel="stylesheet">
-		<link href="../../../../_app/immutable/assets/CauseTable.CHcOp5oj.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/CauseTable.DuKfINX_.css" rel="stylesheet">
 		<link href="../../../../_app/immutable/assets/_page.WePi3wDe.css" rel="stylesheet">
   </head>
   <body>
     <div style="display: contents"><!--[--><!--[--><!--[0--><!--[--><!--[--><!--[-1--><!--[--><div class="kb svelte-e2jw2j"><header><a class="crumb svelte-e2jw2j" href="/kb">support desk · kb</a> <h1 class="svelte-e2jw2j">#4471 · one ticket, three problems</h1> <p class="meta svelte-e2jw2j"><span>owner <b>ciborro</b></span> <span class="status proposed svelte-e2jw2j">proposed</span> <span class="svelte-e2jw2j">reviewed 2026-10-28 · 0 days ago</span></p></header> <!--[-1--><!--]--> <main><p><a href="/kb/incidents/4471">#4471</a> says the date reports are one issue with one fix queued. The desk’s own
 table below says otherwise: the reports merged into it have more than one cause. They were merged on
 subject line alone (<a href="/kb/decisions/0001-dedupe-by-subject">decision 0001</a>), and “wrong date” is a
-subject that more than one bug produces.</p> <aside class="warn svelte-17bri61"><!---->The fix queued for #4471 is the parser fix. It does nothing for the <code>hint</code> or <code>one-day</code> reports: they now have their own tickets.<!----></aside><!----> <h2>What #4471 holds</h2> <p class="sum svelte-12oyimm"><strong>412</strong> reports merged into #4471 · <strong>3</strong> causes</p> <table><thead><tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th></th></tr></thead><tbody><!--[--><tr class="svelte-12oyimm"><td class="svelte-12oyimm"><code>parser</code></td><td class="svelte-12oyimm">374</td><td class="tags svelte-12oyimm">parser ×351 · hint ×23</td><td class="svelte-12oyimm">11</td><td class="svelte-12oyimm">2026-04-01 → 2026-10-04</td><td class="svelte-12oyimm"><!--[0--><a href="https://github.com/ciborro/mega-what-it-shows/issues/1">#1</a><!--]--></td></tr><tr class="svelte-12oyimm"><td class="svelte-12oyimm"><code>hint</code></td><td class="svelte-12oyimm">33</td><td class="tags svelte-12oyimm">hint ×18 · parser ×15</td><td class="svelte-12oyimm">3</td><td class="svelte-12oyimm">2026-04-17 → 2026-09-22</td><td class="svelte-12oyimm"><!--[0--><a href="https://github.com/ciborro/mega-what-it-shows/issues/2">#2</a><!--]--></td></tr><tr class="svelte-12oyimm"><td class="svelte-12oyimm"><code>one-day</code></td><td class="svelte-12oyimm">5</td><td class="tags svelte-12oyimm">parser ×5</td><td class="svelte-12oyimm">5</td><td class="svelte-12oyimm">2026-04-02 → 2026-10-04</td><td class="svelte-12oyimm"><!--[0--><a href="https://github.com/ciborro/mega-what-it-shows/issues/4">#4</a><!--]--></td></tr><!--]--></tbody></table><!----> <p>Each cause has its own ticket, linked in the table’s last column:</p> <ul><li><code>parser</code> → <a href="https://github.com/ciborro/mega-what-it-shows/issues/1" rel="nofollow">#1 Shared date parser reads day-first dates month first</a></li> <li><code>hint</code> → <a href="https://github.com/ciborro/mega-what-it-shows/issues/2" rel="nofollow">#2 booking-v3 form tells day-first tenants to type MM/DD/YYYY</a></li> <li><code>one-day</code> → <a href="https://github.com/ciborro/mega-what-it-shows/issues/4" rel="nofollow">#4 Dates shift by one day across time zones</a></li></ul> <p>The counts are the desk’s own: the table is built from the kb’s data when the page renders. Which
-ticket each cause went to is in <code>src/lib/data/tickets.json</code>.</p> <h2>What each problem is</h2> <p><strong><code>parser</code></strong> — the shared parser reads every date month first. Day-first tenants get day and month
+subject that more than one bug produces.</p> <aside class="warn svelte-17bri61"><!---->The fix queued for #4471 is the parser fix. It does nothing for the <code>hint</code> or <code>one-day</code> reports: they now have their own tickets.<!----></aside><!----> <h2>What #4471 holds</h2> <p class="sum svelte-12oyimm"><strong>412</strong> reports merged into #4471 · <strong>2</strong> causes</p> <table><thead><tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th></th></tr></thead><tbody><!--[--><tr class="svelte-12oyimm"><td class="svelte-12oyimm"><code>parser</code></td><td class="svelte-12oyimm">379</td><td class="tags svelte-12oyimm">parser ×356 · hint ×23</td><td class="svelte-12oyimm">11</td><td class="svelte-12oyimm">2026-04-01 → 2026-10-04</td><td class="svelte-12oyimm">#4471</td></tr><tr class="svelte-12oyimm wrong"><td class="svelte-12oyimm"><code>hint</code></td><td class="svelte-12oyimm">33</td><td class="tags svelte-12oyimm">hint ×18 · parser ×15</td><td class="svelte-12oyimm">3</td><td class="svelte-12oyimm">2026-04-17 → 2026-09-22</td><td class="svelte-12oyimm">not this ticket — no ticket of its own</td></tr><!--]--></tbody></table> <!--[--><!--[0--><p class="note svelte-12oyimm">5 reports read as a one-day move; filed under <code>parser</code> by tenant.</p><!--]--><!--[-1--><!--]--><!--]--><!----> <p>The table is the desk’s own view, built from the export when the page renders. It shows two causes
+and a footnote. The footnote is the third problem: the reports the desk read as a one-day move are
+not a day/month swap, but the table files them under <code>parser</code>, by tenant. So the <code>parser</code> row holds
+two problems, and the tickets split it:</p> <ul><li><code>parser</code>, without the one-day moves → <a href="https://github.com/ciborro/mega-what-it-shows/issues/1" rel="nofollow">#1 Shared date parser reads day-first dates month first</a></li> <li><code>hint</code> → <a href="https://github.com/ciborro/mega-what-it-shows/issues/2" rel="nofollow">#2 booking-v3 form tells day-first tenants to type MM/DD/YYYY</a></li> <li>the footnote’s one-day moves → <a href="https://github.com/ciborro/mega-what-it-shows/issues/4" rel="nofollow">#4 Dates shift by one day across time zones</a></li></ul> <p>Each ticket states how many reports it covers. The table row for <code>hint</code> still says “no ticket of its
+own”: the export predates #2.</p> <h2>What each problem is</h2> <p><strong><code>parser</code></strong> — the shared parser reads every date month first. Day-first tenants get day and month
 swapped: 7 April becomes 4 July.</p> <p><strong><code>hint</code></strong> — <code>booking-v3</code> prints <code>MM/DD/YYYY</code> under its date field. People type month first, as told,
 and the form reads the value the tenant’s way. Same symptom as <code>parser</code>, different code, different
 fix.</p> <p><strong><code>one-day</code></strong> — the reports the desk read as a one-day move (<code>desk-notes.json</code>). Their bodies
@@ -39,16 +42,16 @@ cause: compare the “tagged as” column above.</p> <h2>For the desk</h2> <ul><
 			
 			<script>
 				{
-					__sveltekit_ddtx69 = {
+					__sveltekit_1rf4hoa = {
 						base: new URL("../../../..", location).pathname.slice(0, -1),
-						version: "1793186172641"
+						version: "1793187421082"
 					};
 
 					const element = document.currentScript.parentElement;
 
 					import("../../../../_app/immutable/entry/start.CH5w6lId.js").then(async (kit) => {
-						kit.init(__sveltekit_ddtx69);
-						const app = await import("../../../../_app/immutable/entry/app.Cu5m978g.js");
+						kit.init(__sveltekit_1rf4hoa);
+						const app = await import("../../../../_app/immutable/entry/app.CzRGgSXP.js");
 						kit.start(app, element, {
 							node_ids: [0, 5],
 							data: [null,null],

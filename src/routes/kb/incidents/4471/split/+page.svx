@@ -27,14 +27,17 @@ The fix queued for #4471 is the parser fix. It does nothing for the <code>hint</
 
 <CauseTable ticket={4471} />
 
-Each cause has its own ticket, linked in the table's last column:
+The table is the desk's own view, built from the export when the page renders. It shows two causes
+and a footnote. The footnote is the third problem: the reports the desk read as a one-day move are
+not a day/month swap, but the table files them under `parser`, by tenant. So the `parser` row holds
+two problems, and the tickets split it:
 
-- `parser` → [#1 Shared date parser reads day-first dates month first](https://github.com/ciborro/mega-what-it-shows/issues/1)
+- `parser`, without the one-day moves → [#1 Shared date parser reads day-first dates month first](https://github.com/ciborro/mega-what-it-shows/issues/1)
 - `hint` → [#2 booking-v3 form tells day-first tenants to type MM/DD/YYYY](https://github.com/ciborro/mega-what-it-shows/issues/2)
-- `one-day` → [#4 Dates shift by one day across time zones](https://github.com/ciborro/mega-what-it-shows/issues/4)
+- the footnote's one-day moves → [#4 Dates shift by one day across time zones](https://github.com/ciborro/mega-what-it-shows/issues/4)
 
-The counts are the desk's own: the table is built from the kb's data when the page renders. Which
-ticket each cause went to is in `src/lib/data/tickets.json`.
+Each ticket states how many reports it covers. The table row for `hint` still says "no ticket of its
+own": the export predates #2.
 
 ## What each problem is
 

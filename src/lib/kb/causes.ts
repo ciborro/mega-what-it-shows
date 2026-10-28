@@ -53,7 +53,7 @@ export function uniqueById(reports: Report[]): Report[] {
 }
 
 export type CauseGroup = {
-  cause: Cause | 'one-day' | 'unplaced';
+  cause: Cause | 'unplaced';
   reports: Report[];
   // What intake tagged these reports as: tag → count.
   taggedAs: Record<string, number>;
@@ -63,12 +63,10 @@ export type CauseGroup = {
   mergedInto: number[];
 };
 
-// `oneDay`: reports the desk read as a one-day move (desk-notes.json). Their bodies describe a date
-// shifted by a day, not a day/month swap, so they are a cause of their own, whatever their tenant.
-export function groupByCause(reports: Report[], tenantOf: (r: Report) => Tenant | undefined, oneDay: readonly string[] = []): CauseGroup[] {
+export function groupByCause(reports: Report[], tenantOf: (r: Report) => Tenant | undefined): CauseGroup[] {
   const byCause = new Map<CauseGroup['cause'], Report[]>();
   for (const r of reports) {
-    const cause = oneDay.includes(r.id) ? 'one-day' : (causeOf(r, tenantOf(r)) ?? 'unplaced');
+    const cause = causeOf(r, tenantOf(r)) ?? 'unplaced';
     byCause.set(cause, [...(byCause.get(cause) ?? []), r]);
   }
   return [...byCause.entries()]
@@ -87,4 +85,13 @@ export function groupByCause(reports: Report[], tenantOf: (r: Report) => Tenant 
     .sort((a, b) => b.reports.length - a.reports.length);
 }
 
+// A ticket is the cause most of its reports share; the rest were merged into the wrong place.
+export function ticketCause(groups: CauseGroup[], ticket: number): CauseGroup['cause'] | null {
+  return groups.find((g) => g.mergedInto.includes(ticket))?.cause ?? null;
+}
 
+// Reports the desk read differently from their cause (desk-notes.json): counted where they're filed,
+// footnoted under it.
+export function readAs(g: CauseGroup, ids: readonly string[]): number {
+  return g.reports.filter((r) => ids.includes(r.id)).length;
+}
