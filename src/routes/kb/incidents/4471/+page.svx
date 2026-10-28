@@ -13,9 +13,9 @@ reviewed: 2026-09-30
 </script>
 
 <Callout kind="warn">
-Split on 2026-10-28: #4471 holds more than one problem. See [#4471 · one ticket, two problems](/kb/incidents/4471/split)
-and the tickets [#1 parser](https://github.com/ciborro/mega-what-it-shows/issues/1) and
-[#2 hint](https://github.com/ciborro/mega-what-it-shows/issues/2).
+Split on 2026-10-28: #4471 holds more than one problem. See <a href="/kb/incidents/4471/split">#4471 · one ticket, two problems</a>
+and the tickets <a href="https://github.com/ciborro/mega-what-it-shows/issues/1">#1 parser</a> and
+<a href="https://github.com/ciborro/mega-what-it-shows/issues/2">#2 hint</a>.
 </Callout>
 
 Since April, people have told us their bookings land on the wrong day: a month flipped. By
