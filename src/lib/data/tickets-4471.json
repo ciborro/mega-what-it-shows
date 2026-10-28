@@ -1,8 +1,0 @@
-{
-  "repo": "https://github.com/ciborro/mega-what-it-shows",
-  "tickets": {
-    "parser": { "issue": 1, "title": "Shared date parser reads day-first dates month first" },
-    "hint": { "issue": 2, "title": "booking-v3 form tells day-first tenants to type MM/DD/YYYY" },
-    "one-day": { "issue": 3, "title": "Invites land one day off across time zones" }
-  }
-}
