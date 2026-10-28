@@ -8,48 +8,63 @@ signature: 'v1.eyJzdWIiOiIyODYiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhd
 ---
 
 <script>
-  import CauseTable from '#lib/kb/CauseTable.svelte';
+  // Only the kb's own data and logic, as exported: no new files in src/lib.
+  import reports from '#lib/data/reports-4471.json';
+  import notes from '#lib/data/desk-notes.json';
+  import { causeOf, uniqueById } from '#lib/kb/causes';
+  import { tenantOf } from '#lib/kb/locales';
   import Callout from '#lib/kb/Callout.svelte';
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const REPO = 'https://github.com/ciborro/mega-what-it-shows/issues';
+  const TICKETS = [
+    { issue: 1, problem: 'parser', title: 'Shared date parser reads day-first dates month first' },
+    { issue: 2, problem: 'hint', title: 'booking-v3 form tells day-first tenants to type MM/DD/YYYY' },
+    { issue: 3, problem: 'one-day', title: 'Invites land one day off across time zones' },
+  ];
+
+  // One id, one report. A report the desk read as a one-day move is that problem; the rest go by tenant.
+  const merged = uniqueById(reports).filter((r) => r.mergedInto === 4471);
+  const problemOf = (r) => (notes.oneDayMove.includes(r.id) ? 'one-day' : causeOf(r, tenantOf(r)) ?? 'unplaced');
+  const rows = TICKETS.map((t) => {
+    const rs = merged.filter((r) => problemOf(r) === t.problem);
+    const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();
+    return { ...t, reports: rs.length, tenants: new Set(rs.map((r) => r.tenant)).size, first: days[0], last: days[days.length - 1] };
+  });
+  const placed = rows.reduce((n, r) => n + r.reports, 0);
 </script>
 
-[#4471](/kb/incidents/4471) said the date reports were one issue with one fix queued. The reports
+[#4471](/kb/incidents/4471) says the date reports are one issue with one fix queued. The reports
 say otherwise. They were merged on subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)),
 and "wrong date" is a subject that more than one bug produces.
 
-Each problem now has its own ticket, and its reports are merged into it in the ticket export. The
-counts below come from the desk's own view of each ticket, so they follow the queue.
-
 <Callout kind="warn">
-The fix queued for #4471 is the parser fix. It closes <a href="https://github.com/ciborro/mega-what-it-shows/issues/1">#1</a>
-only. <a href="https://github.com/ciborro/mega-what-it-shows/issues/2">#2</a> and
-<a href="https://github.com/ciborro/mega-what-it-shows/issues/3">#3</a> stay open after it ships.
+The fix queued for #4471 is the parser fix. It closes <a href="{REPO}/1">#1</a> only.
+<a href="{REPO}/2">#2</a> and <a href="{REPO}/3">#3</a> stay open after it ships.
 </Callout>
 
-## #1 · the parser reads day-first dates month first
+## The problems in #4471
 
-[Ticket #1](https://github.com/ciborro/mega-what-it-shows/issues/1). The shared parser reads every
-date month first. Day-first tenants get day and month swapped: 7 April becomes 4 July.
+<p><strong>{merged.length}</strong> reports merged into #4471 · <strong>{rows.length}</strong> problems ·
+<strong>{placed}</strong> placed in a ticket of their own</p>
 
-<CauseTable ticket={1} />
+<table>
+  <thead><tr><th>ticket</th><th>problem</th><th>reports</th><th>tenants</th><th>seen</th></tr></thead>
+  <tbody>
+    {#each rows as r (r.issue)}
+      <tr>
+        <td><a href="{REPO}/{r.issue}">#{r.issue}</a> {r.title}</td>
+        <td><code>{r.problem}</code></td>
+        <td>{r.reports}</td>
+        <td>{r.tenants}</td>
+        <td>{r.first} → {r.last}</td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
 
-## #2 · booking-v3 tells people to type month first
-
-[Ticket #2](https://github.com/ciborro/mega-what-it-shows/issues/2). `booking-v3` prints
-`MM/DD/YYYY` under its date field. People type month first, as told, and the form reads the value
-the tenant's way. Same symptom as #1, different code, different fix.
-
-<CauseTable ticket={2} />
-
-## #3 · dates move by one day
-
-[Ticket #3](https://github.com/ciborro/mega-what-it-shows/issues/3). The date moves by one day, not
-by a swap: Tuesday becomes Monday, a client in Lisbon and a client in Toronto see different days for
-the same meeting, an invite arrives before the booking. That is time-zone handling, not parsing.
-By tenant these reports would file under `parser`; the desk read them as a one-day move
-(`desk-notes.json`), and they are filed here.
-
-<CauseTable ticket={3} />
+The table is computed from the ticket export when the page renders, with the desk's own logic
+(`causes.ts`, `locales.ts`, `desk-notes.json`), so the counts follow the queue.
 
 ## How a report is placed
 
@@ -59,12 +74,25 @@ By tenant these reports would file under `parser`; the desk read them as a one-d
    `booking-v3` form goes to #2; every other day-first report goes to #1.
 
 Intake's tag is not used. It is a guess from the reporter's browser and often names the wrong
-cause: compare the "tagged as" column in the tables above.
+cause: compare the "tagged as" column on [#4471](/kb/incidents/4471).
+
+## What each problem is
+
+**#1 `parser`** — the shared parser reads every date month first. Day-first tenants get day and
+month swapped: 7 April becomes 4 July.
+
+**#2 `hint`** — `booking-v3` prints `MM/DD/YYYY` under its date field. People type month first, as
+told, and the form reads the value the tenant's way. Same symptom as #1, different code, different fix.
+
+**#3 `one-day`** — the date moves by one day, not by a swap: Tuesday becomes Monday, a client in
+Lisbon and a client in Toronto see different days for the same meeting, an invite arrives before the
+booking. That is time-zone handling, not parsing. By tenant these reports file under `parser`; the
+#4471 page only footnotes them.
 
 ## For the desk
 
 - Merge into a ticket only reports with the same problem, not the same subject.
-- When a new date report comes in, place it with the steps above and merge it into that ticket.
+- When a new date report comes in, place it with the steps above and add it to that ticket.
 - Do not close the date reports when the parser fix ships; #2 and #3 need their own fixes.
 
 <RenderStamp {signature} />
